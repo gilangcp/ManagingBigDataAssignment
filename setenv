@@ -1,0 +1,64 @@
+# What prefix should be used for your job names (useful for repetitive package names). End with a dot.
+export CLASS_PREFIX=nl.utwente.bigdata.
+
+# Some admin variables
+export PROJECT_HOME=$PWD
+export LIBJARS=$(echo $PROJECT_HOME/target/lib/*.jar | tr ' ' ',')
+export HADOOP_CONF_DIR=/etc/hadoop/conf
+export USER=${USER:-$(whoami)}
+export SPARK_HOME=${SPARK_HOME:-/usr/lib/spark}
+# run tool with yarn-resource manager choosing a worker as the driver
+function runTool() {
+        name=$1
+        shift
+        set -x
+        $SPARK_HOME/bin/spark-submit --class ${CLASS_PREFIX}$name \
+            --master yarn-cluster \
+            --queue $USER \
+            target/ctit-spark*.jar \
+            $@
+        set +x
+}
+# run a python tool
+function runPythonTool() {
+        name=$1
+        shift
+        set -x
+        $SPARK_HOME/bin/spark-submit  \
+            --master yarn-cluster \
+            --queue $USER \
+            --jars target/ctit-spark*.jar \
+            src/main/python/${name}.py \
+            $@ 
+        set +x
+}
+
+# run tool with the local machine being the driver program.
+function runToolClient() {
+        name=$1
+        shift
+        $SPARK_HOME/bin/spark-submit --class ${CLASS_PREFIX}$name \
+            --master yarn-client \
+            --queue $USER \
+            target/ctit-spark*.jar \
+            $@
+}
+# create a shell
+function runShell() {
+        $SPARK_HOME/bin/spark-shell \
+            --master yarn-client \
+            --conf spark.ui.port=4050 \
+            --queue ${USER} \
+            $@ 
+}
+# run remotely
+function runToolRemote() {
+  TOOL=$1
+  shift
+  CLASS=${CLASS_PREFIX}$TOOL  
+  JAR=$(echo target/*-with-dependencies.jar)
+  JARBASE=$(basename $JAR)
+  mvn package && \
+    rsync -avug $JAR $USER@ctithead1.ewi.utwente.nl:~/$JARBASE && \
+    ssh $USER@ctithead1.ewi.utwente.nl /usr/lib/spark/bin/spark-submit --class $CLASS --master yarn-cluster --queue $USER \~/$JARBASE $@
+}
