@@ -17,9 +17,9 @@ It contains 3 main programs:
 
 ## Output
 
--CountKeywordByUniqueUserPerMonth : (M-YYYY,count)
--CountUniqueUserPerMonth: (count,123456789)
--LocationKeywordByUniqueUserPerMonth: (Location,M-YYYY,count)
+- CountKeywordByUniqueUserPerMonth : (M-YYYY,count)
+- CountUniqueUserPerMonth: (count,123456789)
+- LocationKeywordByUniqueUserPerMonth: (Location,M-YYYY,count)
 
 
 ##Caveats
