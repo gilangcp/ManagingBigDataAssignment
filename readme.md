@@ -27,7 +27,7 @@ It contains 3 main programs:
 - CountUniqueUserPerMonth cannot accept wildcard in source path, thus you need to manually specify each month folder 
 
 ## Contributors
--Gilang Charismadiptya (s1779524)
--Semere Kios (s1773933)
--Dimas Wibisono Prakoso (s1751425)
--Try Agustini (s1574728)
+- Gilang Charismadiptya (s1779524)
+- Semere Kios (s1773933)
+- Dimas Wibisono Prakoso (s1751425)
+- Try Agustini (s1574728)
